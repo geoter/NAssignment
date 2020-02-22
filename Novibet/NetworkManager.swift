@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 enum ErrorType {
     case responseError(String)
@@ -30,7 +29,7 @@ class NetworkManager: NSObject {
     static let shared = NetworkManager()
     private var authentication_header:String?
     let endPoints = EndPoints()
-    let Auth:Authentication = {return Authentication()}()
+    let Auth:Authentication = Authentication()
     
     class Authentication {
         
@@ -75,7 +74,6 @@ class NetworkManager: NSObject {
                  if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                      if let token_type = json["token_type"] as? String, let access_token = json["access_token"] as? String {
                          NetworkManager.shared.authentication_header = "\(token_type) \(access_token)"
-                         os_log("%@",NetworkManager.shared.authentication_header!)
                          DispatchQueue.main.async {
                            completion(true,nil)
                          }
@@ -86,11 +84,12 @@ class NetworkManager: NSObject {
                     completion(false,.jsonParsing)
                  }
              }
-            catch let _ as NSError {
+            catch _{
                 DispatchQueue.main.async {
                  completion(false,.jsonParsing)
-                 }
+                }
              }
         }
     }
 }
+
