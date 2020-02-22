@@ -9,6 +9,7 @@
 import UIKit
 
 enum ErrorType {
+    case badPostValues
     case responseError(String)
     case responseFormat
     case statusCode(Int)
@@ -38,6 +39,81 @@ class NetworkManager: NSObject {
         func signIn(username:String,password:String,completion:@escaping Completion) {
             let defaultSession = URLSession(configuration: .default)
             let url = URL(string:NetworkManager.shared.endPoints.login)!
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let json = [
+                "userName": username,
+                "password": password
+            ]
+            
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: json, options: []) else{
+                completion(false,.badPostValues)
+                return
+            }
+            
+            dataTask = defaultSession.uploadTask(with: request, from: jsonData) { [weak self] data, response, error in
+              defer {
+                self?.dataTask = nil
+              }
+    
+              if let error = error {
+                DispatchQueue.main.async {
+                    completion(false,.responseError(error.localizedDescription))
+                }
+              }
+              else if let data = data{
+                guard let response = response as? HTTPURLResponse else{
+                    DispatchQueue.main.async {
+                        completion(false,.responseFormat)
+                    }
+                    return
+                }
+                if response.statusCode != 200{
+                    DispatchQueue.main.async {
+                        completion(false,.statusCode(response.statusCode))
+                    }
+                }
+                
+                self?.parseResponseData(data: data, completion: completion)
+                
+              }
+            }
+            dataTask?.resume()
+        }
+        
+        func parseResponseData(data:Data,completion:@escaping Completion){
+            do {
+                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                     if let token_type = json["token_type"] as? String, let access_token = json["access_token"] as? String {
+                         NetworkManager.shared.authentication_header = "\(token_type) \(access_token)"
+                         DispatchQueue.main.async {
+                           completion(true,nil)
+                         }
+                        return
+                     }
+                 }
+                 DispatchQueue.main.async {
+                    completion(false,.jsonParsing)
+                 }
+             }
+            catch _{
+                DispatchQueue.main.async {
+                 completion(false,.jsonParsing)
+                }
+             }
+        }
+    }
+    
+    class Games {
+        
+        var dataTask: URLSessionDataTask?
+        
+        func getGames(completion:@escaping Completion) {
+            let defaultSession = URLSession(configuration: .default)
+            let url = URL(string:NetworkManager.shared.endPoints.games)!
             
             dataTask = defaultSession.dataTask(with: url) { [weak self] data, response, error in
               defer {
