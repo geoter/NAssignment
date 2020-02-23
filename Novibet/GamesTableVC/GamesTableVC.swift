@@ -9,17 +9,19 @@
 import UIKit
 
 class GamesTableVC: UITableViewController {
-    
+
+    let gamesManager = GamesManager()
     var gamesEvents:[Event] = []
-    var tiktokTimer:Timer?
+    var tiktokTimer:Timer? //per second
+    var gamesUpdateTimer:Timer? //per interval
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        NetworkManager.shared.Games.getGames{[weak self] (response, error) in
+        NetworkManager.shared.Games.getGames(endPoint: .games){[weak self] (response, error) in
             guard let strongSelf = self else{return}
             
             if let gamesData = response as? GamesJSON{
-                strongSelf.gamesEvents = getGamesEvents(for: gamesData)
+                strongSelf.gamesEvents = strongSelf.gamesManager.getGamesEvents(for: gamesData)
                 strongSelf.tableView.reloadData()
             }
             else{
@@ -29,19 +31,39 @@ class GamesTableVC: UITableViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        tiktokTimer = Timer(timeInterval: 1.0, target: self, selector: #selector(tiktok), userInfo: nil, repeats: true)
-        RunLoop.current.add(tiktokTimer!, forMode: RunLoop.Mode.common)
+        initializeTimers()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        invalidateTimers()
+    }
+    
+    // MARK: - Timers
+    
+    func initializeTimers(){
+        tiktokTimer = Timer(timeInterval: 1.0, target: self, selector: #selector(tiktok), userInfo: nil, repeats: true)
+        RunLoop.current.add(tiktokTimer!, forMode: RunLoop.Mode.common)
+        
+        gamesUpdateTimer = Timer.scheduledTimer(timeInterval: self.gamesManager.updateInterval, target: self, selector: #selector(updateGamesDataModels), userInfo: nil, repeats: true)
+    }
+    
+    func invalidateTimers(){
         tiktokTimer?.invalidate()
         tiktokTimer = nil
+        
+        gamesUpdateTimer?.invalidate()
+        gamesUpdateTimer = nil
     }
     
     @objc func tiktok() {
         NotificationCenter.default.post(name:Notification.Name("TikTok") , object: nil)
+    }
+    
+    @objc func updateGamesDataModels() {
+        NotificationCenter.default.post(name:Notification.Name("updateGames") , object: nil)
+        
+        
     }
     
     // MARK: - Table view

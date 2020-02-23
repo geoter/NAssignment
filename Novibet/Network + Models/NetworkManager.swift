@@ -9,6 +9,7 @@
 import UIKit
 
 enum ErrorType {
+    case badEndPoint
     case badPostValues
     case responseError(String)
     case responseFormat
@@ -20,7 +21,14 @@ typealias Completion = (Bool, ErrorType?)->Void
 typealias Result = (Any?, ErrorType?)->Void
 class NetworkManager: NSObject {
 
-    struct EndPoints {
+    enum EndPoint{
+        case games
+        case updateGames
+        case headlines
+        case updateHeadlines
+    }
+    
+    private struct EndPointURLs {
         let login = "http://www.mocky.io/v2/5d8e4bd9310000a2612b5448"
         let games = "http://www.mocky.io/v2/5d7113513300000b2177973a"
         let headlines = "http://www.mocky.io/v2/5d7113ef3300000e00779746"
@@ -30,7 +38,7 @@ class NetworkManager: NSObject {
     
     static let shared = NetworkManager()
     private var authorization_header:String?
-    let endPoints = EndPoints()
+    private let endPointURLs = EndPointURLs()
     let Auth:Authentication = Authentication()
     let Games:GamesManager = GamesManager()
     
@@ -40,7 +48,7 @@ class NetworkManager: NSObject {
         
         func signIn(username:String,password:String,completion:@escaping Completion) {
             let defaultSession = URLSession(configuration: .default)
-            let url = URL(string:NetworkManager.shared.endPoints.login)!
+            let url = URL(string:NetworkManager.shared.endPointURLs.login)!
             
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
@@ -113,9 +121,23 @@ class NetworkManager: NSObject {
         
         var dataTask: URLSessionDataTask?
         
-        func getGames(completion:@escaping Result) {
+        func getGames(endPoint:EndPoint,completion:@escaping Result) {
             let defaultSession = URLSession(configuration: .default)
-            let url = URL(string:NetworkManager.shared.endPoints.games)!
+            var urlString:String?
+            
+            switch endPoint {
+            case .games:
+                urlString = NetworkManager.shared.endPointURLs.games
+            case .updateGames:
+                urlString = NetworkManager.shared.endPointURLs.updatedGames
+            default:
+                DispatchQueue.main.async {
+                    completion(nil,.badEndPoint)
+                }
+                return
+            }
+            
+            let url = URL(string:urlString!)!
             
             var request = URLRequest(url: url)
             request.httpMethod = "GET"

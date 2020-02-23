@@ -13,11 +13,14 @@
 
 import Foundation
 
-func getGamesEvents(for element:[GamesJSONElement])->[Event]{
-    let events:[Event]? = element.first?.betViews.first?.competitions.flatMap { (comp) -> [Event] in
-        return comp.events
+struct GamesManager {
+    let updateInterval = 2.0
+    func getGamesEvents(for element:[GamesJSONElement])->[Event]{
+        let events:[Event]? = element.first?.betViews.first?.competitions.flatMap { (comp) -> [Event] in
+            return comp.events
+        }
+        return events ?? []
     }
-    return events ?? []
 }
 
 // MARK: - GamesJSONElement
