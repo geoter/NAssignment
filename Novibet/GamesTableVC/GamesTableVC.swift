@@ -22,6 +22,7 @@ class GamesTableVC: UITableViewController {
             
             if let gamesData = response as? GamesJSON{
                 strongSelf.gamesEvents = strongSelf.gamesManager.getGamesEvents(for: gamesData)
+                //FIXME: evovle from brute force reload
                 strongSelf.tableView.reloadData()
             }
             else{

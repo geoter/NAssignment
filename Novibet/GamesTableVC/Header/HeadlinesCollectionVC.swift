@@ -120,7 +120,8 @@ extension HeadlinesCollectionVC{
               
               if let gamesData = response as? HeadlinesJSON{
                   strongSelf.headlines = strongSelf.headlinesManager.getHeadlinesEvents(for: gamesData)
-                  //FIXME: strongSelf.collectionView.reloadData()
+                 //FIXME: reload and carousel
+                  strongSelf.collectionView.reloadData()
               }
               else{
                 print(error.debugDescription)
