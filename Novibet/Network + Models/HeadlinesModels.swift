@@ -5,12 +5,6 @@
 
 import Foundation
 
-struct HeadlinesManager {
-    let updateInterval = 2.0
-    func getHeadlinesEvents(for element:[HeadlinesJSONElement])->[Event]{
-        return []
-    }
-}
 
 // MARK: - HeadlinesJSONElement
 struct HeadlinesJSONElement: Codable {

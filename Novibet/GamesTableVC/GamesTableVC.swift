@@ -25,7 +25,7 @@ class GamesTableVC: UITableViewController {
                 strongSelf.tableView.reloadData()
             }
             else{
-                print(error)
+                print(error.debugDescription)
             }
         }
     }
@@ -69,7 +69,7 @@ class GamesTableVC: UITableViewController {
                 strongSelf.tableView.reloadData()
             }
             else{
-                print(error)
+                print(error.debugDescription)
             }
         }
     }
@@ -146,7 +146,6 @@ class GamesTableVC: UITableViewController {
     */
 
     @IBAction func unwindToGamesTableVC(_ unwindSegue: UIStoryboardSegue) {
-        let sourceViewController = unwindSegue.source
-        // Use data from the view controller which initiated the unwind segue
+    
     }
 }

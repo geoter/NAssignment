@@ -68,14 +68,22 @@
 		960FB3E52402791000D53854 /* GamesTableVC */ = {
 			isa = PBXGroup;
 			children = (
+				962AA46C2402E18B00FB6562 /* Header */,
 				96C9AAD72401BCCE00165CC9 /* GamesTableVC.swift */,
-				962AA4622402BF0C00FB6562 /* HeadlinesCollectionVC.swift */,
-				962AA4642402C05400FB6562 /* HeadlineCell.swift */,
-				962AA4652402C05400FB6562 /* HeadlineCell.xib */,
 				960FB3E2240278ED00D53854 /* GameTableCell.swift */,
 				962AA4682402C2E400FB6562 /* HeaderCell.swift */,
 			);
 			path = GamesTableVC;
+			sourceTree = "<group>";
+		};
+		962AA46C2402E18B00FB6562 /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				962AA4622402BF0C00FB6562 /* HeadlinesCollectionVC.swift */,
+				962AA4642402C05400FB6562 /* HeadlineCell.swift */,
+				962AA4652402C05400FB6562 /* HeadlineCell.xib */,
+			);
+			path = Header;
 			sourceTree = "<group>";
 		};
 		96C9AAB52401927400165CC9 = {

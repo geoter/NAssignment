@@ -138,11 +138,6 @@ class NetworkManager: NSObject {
                 
             case .games:
                 urlString = NetworkManager.shared.endPointURLs.games
-            default:
-                DispatchQueue.main.async {
-                    completion(nil,.badEndPoint)
-                }
-                return
             }
             
             if operationsQueue == nil{
@@ -179,7 +174,8 @@ class NetworkManager: NSObject {
            var defaultSession: URLSession! = URLSession(configuration: .default)
            var operationsQueue:Operations?
            var dataTask: URLSessionDataTask?
-           
+           let updateInterval = 2.0
+        
            func getHeadlines(endPoint:HeadlinesEndPoint,completion:@escaping Result) {
                var urlString:String?
                
@@ -189,11 +185,6 @@ class NetworkManager: NSObject {
                    
                case .headlines:
                    urlString = NetworkManager.shared.endPointURLs.headlines
-               default:
-                   DispatchQueue.main.async {
-                       completion(nil,.badEndPoint)
-                   }
-                   return
                }
                
                if operationsQueue == nil{
@@ -204,8 +195,11 @@ class NetworkManager: NSObject {
            }
            
            func getHeadlinesEvents(for element:[HeadlinesJSONElement])->[Headline]{
-                let headlines:[Headline]? = element.first?.HBetViews
-                return headlines ?? []
+//                let headlines:[Headline]? = element.first?.HBetViews
+//                return headlines ?? []
+            // FIXME: returns only one result so for testing purposes
+            let headlines:[Headline] = element.first!.HBetViews!
+            return [headlines.first!,headlines.first!,headlines.first!]
            }
            
            func parseResponseData(data:Data,completion:@escaping Result){
@@ -233,7 +227,6 @@ class NetworkManager: NSObject {
         
         func addOperation(dataTask:URLSessionDataTask){
             //if queue.operationCount > 1{return}
-            print("Operations count: \(queue.operations.count)")
             let operation = BlockOperation(block: {
               //print("start fetching \(url.absoluteString)")
                 dataTask.resume()

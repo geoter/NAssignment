@@ -20,6 +20,10 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8H7-3r-evd">
                         <rect key="frame" x="0.0" y="0.0" width="360" height="85"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cVb-VZ-jMj">
+                                <rect key="frame" x="5" y="5" width="350" height="75"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="BIx-RC-5Va">
                                 <rect key="frame" x="20" y="20" width="230" height="45"/>
                                 <subviews>
@@ -50,13 +54,17 @@
                         <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="KMc-qX-zv1" firstAttribute="centerY" secondItem="8H7-3r-evd" secondAttribute="centerY" id="3Jw-Tu-3sV"/>
-                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="360" id="52e-6D-FLC"/>
                             <constraint firstAttribute="trailing" secondItem="KMc-qX-zv1" secondAttribute="trailing" id="8Se-Cb-Cq9"/>
                             <constraint firstItem="BIx-RC-5Va" firstAttribute="top" secondItem="8H7-3r-evd" secondAttribute="top" constant="20" symbolic="YES" id="Egq-hI-EVs"/>
                             <constraint firstItem="BIx-RC-5Va" firstAttribute="leading" secondItem="8H7-3r-evd" secondAttribute="leading" constant="20" symbolic="YES" id="Kpt-QE-FyT"/>
                             <constraint firstItem="KMc-qX-zv1" firstAttribute="leading" secondItem="BIx-RC-5Va" secondAttribute="trailing" constant="10" id="P22-i9-Zpc"/>
+                            <constraint firstAttribute="bottom" secondItem="cVb-VZ-jMj" secondAttribute="bottom" constant="5" id="ToY-ou-vtb"/>
                             <constraint firstAttribute="bottom" secondItem="BIx-RC-5Va" secondAttribute="bottom" constant="20" symbolic="YES" id="ZJn-92-nHC"/>
+                            <constraint firstItem="cVb-VZ-jMj" firstAttribute="leading" secondItem="8H7-3r-evd" secondAttribute="leading" constant="5" id="c1g-N6-M4C"/>
                             <constraint firstAttribute="height" constant="85" id="caQ-5A-7tM"/>
+                            <constraint firstAttribute="trailing" secondItem="cVb-VZ-jMj" secondAttribute="trailing" constant="5" id="dG3-AB-kL6"/>
+                            <constraint firstAttribute="width" constant="360" id="udb-sv-Dzm"/>
+                            <constraint firstItem="cVb-VZ-jMj" firstAttribute="top" secondItem="8H7-3r-evd" secondAttribute="top" constant="5" id="viS-nH-aG4"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -69,6 +77,7 @@
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <connections>
+                <outlet property="cellWidthConstraint" destination="udb-sv-Dzm" id="7fa-YT-ewG"/>
                 <outlet property="competitor1Label" destination="Oxc-dT-AZU" id="Lxa-Ym-AKZ"/>
                 <outlet property="competitor2Label" destination="Sjd-vB-2ox" id="ybb-on-Kq4"/>
                 <outlet property="startTimeLabel" destination="KMc-qX-zv1" id="Tef-Mt-3up"/>

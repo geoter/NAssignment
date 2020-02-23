@@ -9,7 +9,8 @@
 import UIKit
 
 class HeadlineCell: UICollectionViewCell {
-
+    
+    @IBOutlet weak var cellWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var competitor1Label: UILabel!
     @IBOutlet weak var competitor2Label: UILabel!
     @IBOutlet weak var startTimeLabel: UILabel!
