@@ -15,14 +15,16 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     @IBAction func signInPressed(_ sender: Any) {
-        NetworkManager.shared.Auth.signIn(username: "your_first_name", password: "your_sire_name")
-        { (success, error) in
+        NetworkManager.shared.Auth.signIn(username: "your_first_name", password: "your_sire_name") { [weak self] (success, error) in
+            
+            guard let strongSelf = self else{return}
+            
             if success{
-                self.performSegue(withIdentifier:"showGames", sender: self)
+                self?.performSegue(withIdentifier:"showGames", sender: strongSelf)
             }
             else{
                 // TODO: fix switch cases for error enum
-                alert(title: "Error", message:"Could not sign in. Please try again.").presentInView(controller: self)
+                alert(title: "Error", message:"Could not sign in. Please try again.").presentInView(controller: strongSelf)
             }
         }
     }

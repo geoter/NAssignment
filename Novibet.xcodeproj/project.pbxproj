@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		960FB3E3240278ED00D53854 /* GameTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960FB3E2240278ED00D53854 /* GameTableCell.swift */; };
 		96C9AAC22401927400165CC9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C9AAC12401927400165CC9 /* AppDelegate.swift */; };
 		96C9AAC62401927400165CC9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C9AAC52401927400165CC9 /* ViewController.swift */; };
 		96C9AAC92401927400165CC9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96C9AAC72401927400165CC9 /* Main.storyboard */; };
@@ -15,9 +16,11 @@
 		96C9AAD62401988100165CC9 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C9AAD52401988100165CC9 /* NetworkManager.swift */; };
 		96C9AAD82401BCCE00165CC9 /* GamesTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C9AAD72401BCCE00165CC9 /* GamesTableVC.swift */; };
 		96C9AADA2401BEED00165CC9 /* sharedLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C9AAD92401BEED00165CC9 /* sharedLogic.swift */; };
+		96C9AADC2401E0B700165CC9 /* GamesModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C9AADB2401E0B700165CC9 /* GamesModels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		960FB3E2240278ED00D53854 /* GameTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTableCell.swift; sourceTree = "<group>"; };
 		96C9AABE2401927400165CC9 /* Novibet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Novibet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C9AAC12401927400165CC9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		96C9AAC52401927400165CC9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -28,6 +31,7 @@
 		96C9AAD52401988100165CC9 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		96C9AAD72401BCCE00165CC9 /* GamesTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesTableVC.swift; sourceTree = "<group>"; };
 		96C9AAD92401BEED00165CC9 /* sharedLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sharedLogic.swift; sourceTree = "<group>"; };
+		96C9AADB2401E0B700165CC9 /* GamesModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +45,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		960FB3E4240278F600D53854 /* Network + Models */ = {
+			isa = PBXGroup;
+			children = (
+				96C9AADB2401E0B700165CC9 /* GamesModels.swift */,
+				96C9AAD52401988100165CC9 /* NetworkManager.swift */,
+			);
+			path = "Network + Models";
+			sourceTree = "<group>";
+		};
+		960FB3E52402791000D53854 /* GamesTableVC */ = {
+			isa = PBXGroup;
+			children = (
+				96C9AAD72401BCCE00165CC9 /* GamesTableVC.swift */,
+				960FB3E2240278ED00D53854 /* GameTableCell.swift */,
+			);
+			path = GamesTableVC;
+			sourceTree = "<group>";
+		};
 		96C9AAB52401927400165CC9 = {
 			isa = PBXGroup;
 			children = (
@@ -62,8 +84,8 @@
 			children = (
 				96C9AAC12401927400165CC9 /* AppDelegate.swift */,
 				96C9AAC52401927400165CC9 /* ViewController.swift */,
-				96C9AAD72401BCCE00165CC9 /* GamesTableVC.swift */,
-				96C9AAD52401988100165CC9 /* NetworkManager.swift */,
+				960FB3E52402791000D53854 /* GamesTableVC */,
+				960FB3E4240278F600D53854 /* Network + Models */,
 				96C9AAD92401BEED00165CC9 /* sharedLogic.swift */,
 				96C9AAC72401927400165CC9 /* Main.storyboard */,
 				96C9AACA2401927800165CC9 /* Assets.xcassets */,
@@ -145,6 +167,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				96C9AAD62401988100165CC9 /* NetworkManager.swift in Sources */,
+				960FB3E3240278ED00D53854 /* GameTableCell.swift in Sources */,
+				96C9AADC2401E0B700165CC9 /* GamesModels.swift in Sources */,
 				96C9AAC62401927400165CC9 /* ViewController.swift in Sources */,
 				96C9AAC22401927400165CC9 /* AppDelegate.swift in Sources */,
 				96C9AAD82401BCCE00165CC9 /* GamesTableVC.swift in Sources */,

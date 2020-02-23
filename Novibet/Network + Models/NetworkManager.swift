@@ -13,10 +13,11 @@ enum ErrorType {
     case responseError(String)
     case responseFormat
     case statusCode(Int)
-    case jsonParsing
+    case jsonParsing(String)
 }
 
 typealias Completion = (Bool, ErrorType?)->Void
+typealias Result = (Any?, ErrorType?)->Void
 class NetworkManager: NSObject {
 
     struct EndPoints {
@@ -28,9 +29,10 @@ class NetworkManager: NSObject {
     }
     
     static let shared = NetworkManager()
-    private var authentication_header:String?
+    private var authorization_header:String?
     let endPoints = EndPoints()
     let Auth:Authentication = Authentication()
+    let Games:GamesManager = GamesManager()
     
     class Authentication {
         
@@ -88,7 +90,7 @@ class NetworkManager: NSObject {
             do {
                  if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                      if let token_type = json["token_type"] as? String, let access_token = json["access_token"] as? String {
-                         NetworkManager.shared.authentication_header = "\(token_type) \(access_token)"
+                         NetworkManager.shared.authorization_header = "\(token_type) \(access_token)"
                          DispatchQueue.main.async {
                            completion(true,nil)
                          }
@@ -96,45 +98,50 @@ class NetworkManager: NSObject {
                      }
                  }
                  DispatchQueue.main.async {
-                    completion(false,.jsonParsing)
+                    completion(false,.jsonParsing("JSONSerialization failed"))
                  }
              }
-            catch _{
+            catch{
                 DispatchQueue.main.async {
-                 completion(false,.jsonParsing)
+                    completion(false,.jsonParsing(error.localizedDescription))
                 }
              }
         }
     }
     
-    class Games {
+    class GamesManager {
         
         var dataTask: URLSessionDataTask?
         
-        func getGames(completion:@escaping Completion) {
+        func getGames(completion:@escaping Result) {
             let defaultSession = URLSession(configuration: .default)
             let url = URL(string:NetworkManager.shared.endPoints.games)!
             
-            dataTask = defaultSession.dataTask(with: url) { [weak self] data, response, error in
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            
+            request.setValue(NetworkManager.shared.authorization_header, forHTTPHeaderField: "Authorization")
+            
+            dataTask = defaultSession.dataTask(with: request) { [weak self] data, response, error in
               defer {
                 self?.dataTask = nil
               }
     
               if let error = error {
                 DispatchQueue.main.async {
-                    completion(false,.responseError(error.localizedDescription))
+                    completion(nil,.responseError(error.localizedDescription))
                 }
               }
               else if let data = data{
                 guard let response = response as? HTTPURLResponse else{
                     DispatchQueue.main.async {
-                        completion(false,.responseFormat)
+                        completion(nil,.responseFormat)
                     }
                     return
                 }
                 if response.statusCode != 200{
                     DispatchQueue.main.async {
-                        completion(false,.statusCode(response.statusCode))
+                        completion(nil,.statusCode(response.statusCode))
                     }
                 }
                 
@@ -145,27 +152,21 @@ class NetworkManager: NSObject {
             dataTask?.resume()
         }
         
-        func parseResponseData(data:Data,completion:@escaping Completion){
+        func parseResponseData(data:Data,completion:@escaping Result){
             do {
-                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                     if let token_type = json["token_type"] as? String, let access_token = json["access_token"] as? String {
-                         NetworkManager.shared.authentication_header = "\(token_type) \(access_token)"
-                         DispatchQueue.main.async {
-                           completion(true,nil)
-                         }
-                        return
-                     }
-                 }
+                let gamesJSON = try JSONDecoder().decode(GamesJSON.self, from: data)
                  DispatchQueue.main.async {
-                    completion(false,.jsonParsing)
+                    completion(gamesJSON,nil)
                  }
              }
-            catch _{
+            catch{
+                print(error)
                 DispatchQueue.main.async {
-                 completion(false,.jsonParsing)
+                    completion(nil,.jsonParsing(error.localizedDescription))
                 }
              }
         }
     }
 }
+
 
