@@ -32,10 +32,10 @@ class GameTableCell: UITableViewCell {
     }
     
     func configure(gameEvent:Event){
-        self.competitor1Label.text = gameEvent.additionalCaptions.competitor1
-        self.competitor2Label.text = gameEvent.additionalCaptions.competitor2
+        self.competitor1Label.text = gameEvent.additionalCaptions?.competitor1
+        self.competitor2Label.text = gameEvent.additionalCaptions?.competitor2
         
-        if let shortTime = gameEvent.liveData.elapsed.components(separatedBy:".").first{
+        if let shortTime = gameEvent.liveData?.elapsed?.components(separatedBy:".").first{
            
             let pattern = "(([0-1][0-9])|([2][0-3])):([0-5][0-9]):([0-5][0-9])" //HH:MM:SS
             let predicate = NSPredicate(format: "SELF MATCHES %@", pattern)
@@ -53,13 +53,13 @@ class GameTableCell: UITableViewCell {
                setTimeLabelText(newText: "\(minutesFinalString):"+seconds)
             }
             else {
-                print("Bad time format: \(shortTime)")
+                //print("Bad time format: \(shortTime)")
                 setTimeLabelText(newText: "-")
             }
             
         }
         else{
-            print("Bad time format: \(gameEvent.liveData.elapsed)")
+            //print("Bad time format: \(gameEvent.liveData.elapsed)")
             setTimeLabelText(newText: "-")
         }
     }

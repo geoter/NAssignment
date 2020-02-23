@@ -48,6 +48,31 @@
             </objects>
             <point key="canvasLocation" x="1047.8260869565217" y="112.5"/>
         </scene>
+        <!--Headlines CollectionVC-->
+        <scene sceneID="w2D-GV-6Wn">
+            <objects>
+                <collectionViewController storyboardIdentifier="HeadlinesCollectionVC" id="7mb-PC-b6q" customClass="HeadlinesCollectionVC" customModule="Novibet" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="D2M-dl-eE1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="8oH-M0-bVK">
+                            <size key="itemSize" width="360" height="85"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells/>
+                        <connections>
+                            <outlet property="dataSource" destination="7mb-PC-b6q" id="Eie-zs-6C0"/>
+                            <outlet property="delegate" destination="7mb-PC-b6q" id="iKd-Pt-GOz"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oYC-2V-Kdm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2591" y="-250"/>
+        </scene>
         <!--Games TableVC-->
         <scene sceneID="3yj-wS-gYH">
             <objects>
@@ -57,8 +82,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HeaderCell" rowHeight="180" id="crJ-HE-UgA" customClass="HeaderCell" customModule="Novibet" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="180"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="crJ-HE-UgA" id="JJF-Xr-HGS">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="180"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="GameCell" rowHeight="123" id="uoB-1d-vRz" customClass="GameTableCell" customModule="Novibet" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="414" height="123"/>
+                                <rect key="frame" x="0.0" y="208" width="414" height="123"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uoB-1d-vRz" id="git-vo-Grn">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="123"/>
@@ -104,16 +138,8 @@
                                     <outlet property="competitor1Label" destination="Rnf-QJ-BY6" id="8Vd-oo-Pbs"/>
                                     <outlet property="competitor2Label" destination="9sk-80-ZLV" id="Qj8-Ul-ycs"/>
                                     <outlet property="elapsedLabel" destination="RRS-iY-R2R" id="OjE-b8-5Qx"/>
+                                    <segue destination="kuV-2v-eIc" kind="show" id="SA1-Zv-Qe6"/>
                                 </connections>
-                            </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HeaderCell" rowHeight="85" id="crJ-HE-UgA">
-                                <rect key="frame" x="0.0" y="151" width="414" height="85"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="crJ-HE-UgA" id="JJF-Xr-HGS">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="85"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                                <color key="backgroundColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -126,6 +152,33 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ejW-bp-b1q" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1779.7101449275365" y="106.47321428571428"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="0uH-S4-f7u">
+            <objects>
+                <viewController id="kuV-2v-eIc" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tct-gm-Wb0">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="685-QC-AIu">
+                                <rect key="frame" x="48" y="87" width="34" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Back"/>
+                                <connections>
+                                    <segue destination="ZMs-Yb-MC1" kind="unwind" unwindAction="unwindToGamesTableVC:" id="cf7-m5-3ri"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="CLE-rV-rQU"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="nRy-Dd-TH4"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oCD-v7-eBH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="ZMs-Yb-MC1" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2555" y="617"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="1ae-DF-Fo7">

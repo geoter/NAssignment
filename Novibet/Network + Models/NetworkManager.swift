@@ -19,16 +19,20 @@ enum ErrorType {
 
 typealias Completion = (Bool, ErrorType?)->Void
 typealias Result = (Any?, ErrorType?)->Void
+
 class NetworkManager: NSObject {
 
-    enum EndPoint{
+    enum GamesEndPoint{
         case games
         case updateGames
+    }
+    
+    enum HeadlinesEndPoint{
         case headlines
         case updateHeadlines
     }
     
-    private struct EndPointURLs {
+    fileprivate struct EndPointURLs {
         let login = "http://www.mocky.io/v2/5d8e4bd9310000a2612b5448"
         let games = "http://www.mocky.io/v2/5d7113513300000b2177973a"
         let headlines = "http://www.mocky.io/v2/5d7113ef3300000e00779746"
@@ -37,10 +41,12 @@ class NetworkManager: NSObject {
     }
     
     static let shared = NetworkManager()
-    private var authorization_header:String?
-    private let endPointURLs = EndPointURLs()
-    let Auth:Authentication = Authentication()
-    let Games:GamesManager = GamesManager()
+    fileprivate var authorization_header:String?
+    fileprivate let endPointURLs = EndPointURLs()
+    
+    lazy var Auth:Authentication = Authentication()
+    lazy var Games:GamesManager = GamesManager()
+    lazy var Headlines:HeadlinesManager = HeadlinesManager()
     
     class Authentication {
         
@@ -117,19 +123,21 @@ class NetworkManager: NSObject {
         }
     }
     
-    class GamesManager {
-        
+    class GamesManager:ModelsManager {
+        var defaultSession: URLSession! = URLSession(configuration: .default)
+        var operationsQueue:Operations?
         var dataTask: URLSessionDataTask?
+        let updateInterval = 2.0
         
-        func getGames(endPoint:EndPoint,completion:@escaping Result) {
-            let defaultSession = URLSession(configuration: .default)
+        func getGames(endPoint:GamesEndPoint,completion:@escaping Result) {
             var urlString:String?
             
             switch endPoint {
-            case .games:
-                urlString = NetworkManager.shared.endPointURLs.games
             case .updateGames:
                 urlString = NetworkManager.shared.endPointURLs.updatedGames
+                
+            case .games:
+                urlString = NetworkManager.shared.endPointURLs.games
             default:
                 DispatchQueue.main.async {
                     completion(nil,.badEndPoint)
@@ -137,14 +145,126 @@ class NetworkManager: NSObject {
                 return
             }
             
-            let url = URL(string:urlString!)!
-            
+            if operationsQueue == nil{
+                operationsQueue = Operations(session: defaultSession)
+            }
+           let dataTask = prepareDownloadTask(urlString: urlString!,completion)
+           operationsQueue?.addOperation(dataTask: dataTask)
+        }
+        
+        func getGamesEvents(for element:[GamesJSONElement])->[Event]{
+            let events:[Event]? = element.first?.betViews?.first?.competitions?.flatMap { (comp) -> [Event] in
+                return (comp.events ?? [])
+            }
+            return events ?? []
+        }
+        
+        func parseResponseData(data:Data,completion:@escaping Result){
+            do {
+                let gamesJSON = try JSONDecoder().decode(GamesJSON.self, from: data)
+                 DispatchQueue.main.async {
+                    completion(gamesJSON,nil)
+                 }
+             }
+            catch{
+                print(error)
+                DispatchQueue.main.async {
+                    completion(nil,.jsonParsing(error.localizedDescription))
+                }
+             }
+        }
+    }
+   
+    class HeadlinesManager:ModelsManager {
+           var defaultSession: URLSession! = URLSession(configuration: .default)
+           var operationsQueue:Operations?
+           var dataTask: URLSessionDataTask?
+           
+           func getHeadlines(endPoint:HeadlinesEndPoint,completion:@escaping Result) {
+               var urlString:String?
+               
+               switch endPoint {
+               case .updateHeadlines:
+                   urlString = NetworkManager.shared.endPointURLs.updatedHeadlines
+                   
+               case .headlines:
+                   urlString = NetworkManager.shared.endPointURLs.headlines
+               default:
+                   DispatchQueue.main.async {
+                       completion(nil,.badEndPoint)
+                   }
+                   return
+               }
+               
+               if operationsQueue == nil{
+                   operationsQueue = Operations(session: defaultSession)
+               }
+              let dataTask = prepareDownloadTask(urlString: urlString!,completion)
+              operationsQueue?.addOperation(dataTask: dataTask)
+           }
+           
+           func getHeadlinesEvents(for element:[HeadlinesJSONElement])->[Headline]{
+                let headlines:[Headline]? = element.first?.HBetViews
+                return headlines ?? []
+           }
+           
+           func parseResponseData(data:Data,completion:@escaping Result){
+               do {
+                   let gamesJSON = try JSONDecoder().decode(HeadlinesJSON.self, from: data)
+                    DispatchQueue.main.async {
+                       completion(gamesJSON,nil)
+                    }
+                }
+               catch{
+                   print(error)
+                   DispatchQueue.main.async {
+                       completion(nil,.jsonParsing(error.localizedDescription))
+                   }
+                }
+           }
+       }
+    
+    class Operations{
+        let queue = OperationQueue()
+        let session:URLSession
+        init(session:URLSession) {
+            self.session = session
+        }
+        
+        func addOperation(dataTask:URLSessionDataTask){
+            //if queue.operationCount > 1{return}
+            print("Operations count: \(queue.operations.count)")
+            let operation = BlockOperation(block: {
+              //print("start fetching \(url.absoluteString)")
+                dataTask.resume()
+            })
+
+            queue.addOperation(operation)
+        }
+    }
+}
+
+protocol ModelsManager: AnyObject {
+    
+    var defaultSession:URLSession! { get set }
+    var dataTask: URLSessionDataTask? { get set }
+    
+    func prepareDownloadTask(urlString:String,_ completion:@escaping Result)->URLSessionDataTask
+    func parseResponseData(data:Data,completion:@escaping Result)
+}
+
+extension ModelsManager{
+    func prepareDownloadTask(urlString:String,_ completion:@escaping Result)->URLSessionDataTask{
+             
+             let url = URL(string:urlString)!
+                        
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
             
             request.setValue(NetworkManager.shared.authorization_header, forHTTPHeaderField: "Authorization")
             
-            dataTask = defaultSession.dataTask(with: request) { [weak self] data, response, error in
+             let dataTask:URLSessionDataTask = defaultSession.dataTask(with: request) { [weak self] data, response, error in
+                 //print("finished fetching \(url.absoluteString)")
               defer {
                 self?.dataTask = nil
               }
@@ -171,24 +291,8 @@ class NetworkManager: NSObject {
                 
               }
             }
-            dataTask?.resume()
-        }
-        
-        func parseResponseData(data:Data,completion:@escaping Result){
-            do {
-                let gamesJSON = try JSONDecoder().decode(GamesJSON.self, from: data)
-                 DispatchQueue.main.async {
-                    completion(gamesJSON,nil)
-                 }
-             }
-            catch{
-                print(error)
-                DispatchQueue.main.async {
-                    completion(nil,.jsonParsing(error.localizedDescription))
-                }
-             }
-        }
-    }
+             
+             return dataTask
+         }
 }
-
 

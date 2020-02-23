@@ -10,14 +10,14 @@ import UIKit
 
 class GamesTableVC: UITableViewController {
 
-    let gamesManager = GamesManager()
+    let gamesManager = NetworkManager.shared.Games
     var gamesEvents:[Event] = []
     var tiktokTimer:Timer? //per second
     var gamesUpdateTimer:Timer? //per interval
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        NetworkManager.shared.Games.getGames(endPoint: .games){[weak self] (response, error) in
+        gamesManager.getGames(endPoint: .games){[weak self] (response, error) in
             guard let strongSelf = self else{return}
             
             if let gamesData = response as? GamesJSON{
@@ -61,9 +61,17 @@ class GamesTableVC: UITableViewController {
     }
     
     @objc func updateGamesDataModels() {
-        NotificationCenter.default.post(name:Notification.Name("updateGames") , object: nil)
-        
-        
+        NetworkManager.shared.Games.getGames(endPoint: .updateGames){[weak self] (response, error) in
+            guard let strongSelf = self else{return}
+            
+            if let gamesData = response as? GamesJSON{
+                strongSelf.gamesEvents = strongSelf.gamesManager.getGamesEvents(for: gamesData)
+                strongSelf.tableView.reloadData()
+            }
+            else{
+                print(error)
+            }
+        }
     }
     
     // MARK: - Table view
@@ -126,8 +134,6 @@ class GamesTableVC: UITableViewController {
 
         return cell
     }
-    
-    
 
     /*
     // MARK: - Navigation
@@ -139,4 +145,8 @@ class GamesTableVC: UITableViewController {
     }
     */
 
+    @IBAction func unwindToGamesTableVC(_ unwindSegue: UIStoryboardSegue) {
+        let sourceViewController = unwindSegue.source
+        // Use data from the view controller which initiated the unwind segue
+    }
 }
